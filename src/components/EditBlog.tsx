@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
-import { BlogsAPI } from '../apis/BlogsAPI';
+import { BlogsAPI } from '../apis';
 import { selectSelectedUser } from '../features/usersSlice';
 
 export const EditBlog = () => {

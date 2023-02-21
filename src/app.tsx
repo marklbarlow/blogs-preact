@@ -19,7 +19,7 @@ import { useEffect } from 'preact/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { BlogsAPI } from './apis/BlogsAPI';
+import { BlogsAPI } from './apis';
 import { EditBlog, Home, ViewBlog } from './components';
 import {
   selectAvailableUsers,

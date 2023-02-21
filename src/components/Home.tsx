@@ -12,7 +12,7 @@ import createDOMPurify from 'dompurify';
 import { useEffect, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
 
-import { BlogsAPI } from '../apis/BlogsAPI';
+import { BlogsAPI } from '../apis';
 import { BlogPreview } from '../model';
 
 const DOMPurify = createDOMPurify(window);

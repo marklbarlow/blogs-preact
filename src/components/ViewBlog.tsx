@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { BlogsAPI } from '../apis/BlogsAPI';
+import { BlogsAPI } from '../apis';
 import { selectSelectedUser } from '../features/usersSlice';
 import { BlogComment, BlogEntry, BlogLike, User } from '../model';
 import { Comments } from './Comments';
