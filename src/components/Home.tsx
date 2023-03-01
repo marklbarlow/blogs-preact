@@ -1,21 +1,10 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Container,
-  List,
-  Typography,
-} from '@mui/material';
-import { format } from 'date-fns';
-import createDOMPurify from 'dompurify';
-import { useEffect, useState } from 'preact/hooks';
+import { List } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BlogsAPI } from '../apis';
 import { BlogPreview } from '../model';
-
-const DOMPurify = createDOMPurify(window);
+import { Card } from './Card';
 
 export const Home = () => {
   const [previews, setPreviews] = useState<BlogPreview[]>([]);
@@ -30,32 +19,12 @@ export const Home = () => {
   }, []);
 
   const items = previews.map(preview => (
-    <Card elevation={8} sx={{ margin: '20px', minWidth: 275 }} key={preview.id}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {format(new Date(preview.timestamp), 'MMMM d, y')}
-        </Typography>
-        <Typography variant="h5" component="div">
-          {preview.title}
-        </Typography>
-        <Typography
-          variant="body2"
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(preview.text),
-          }}
-        ></Typography>
-      </CardContent>
-      <CardActions>
-        <Button onClick={() => onViewBlog(preview.id)}>Read More</Button>
-      </CardActions>
-    </Card>
+    <Card onReadClicked={onViewBlog} preview={preview} key={preview.id}></Card>
   ));
 
   return (
-    <Container maxWidth="md">
-      <section>
-        <List>{items}</List>
-      </section>
-    </Container>
+    <section className="mt-8">
+      <div className="flex flex-col gap-4">{items}</div>
+    </section>
   );
 };

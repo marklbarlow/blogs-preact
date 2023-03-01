@@ -1,14 +1,14 @@
-import { CircularProgress, Container } from '@mui/material';
-import { Box } from '@mui/system';
+import { CircularProgress } from '@mui/material';
 import { format } from 'date-fns';
 import createDOMPurify from 'dompurify';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { BlogsAPI } from '../apis';
 import { selectSelectedUser } from '../features/usersSlice';
 import { BlogComment, BlogEntry, BlogLike, User } from '../model';
+import { Avatar } from './Avatar';
 import { Comments } from './Comments';
 import { Likes } from './Likes';
 
@@ -81,30 +81,31 @@ export const ViewBlog = () => {
   }, [id, loadBlogComments, loadBlogLikes]);
 
   return entry ? (
-    <Box sx={{ marginTop: '32px' }}>
-      <Container maxWidth="md">
-        <span className="date">
-          {format(new Date(entry.timestamp), 'EEEE, MMMM d, y')}
-        </span>
+    <main className="flex flex-col gap-4 w-full mt-8">
+      <span className="text-stone-500">
+        {format(new Date(entry.timestamp), 'EEEE, MMMM d, y')}
+      </span>
 
-        <h1>{entry.title}</h1>
+      <h1 className="text-4xl">{entry.title}</h1>
+      <Avatar username={entry.username}></Avatar>
 
-        <article>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(entry.text),
-            }}
-          ></div>
-        </article>
-        <Likes
-          likes={likes}
-          onLikeToggled={onLikeToggled}
-          userHasLiked={userHasLiked}
-        />
-        <Comments comments={comments} onCommentAdded={onCommentAdded} />
-      </Container>
-    </Box>
+      <article className="prose prose-lg max-w-none prose-img:mx-auto">
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(entry.text),
+          }}
+        ></div>
+      </article>
+      <Likes
+        likes={likes}
+        onLikeToggled={onLikeToggled}
+        userHasLiked={userHasLiked}
+      />
+      <Comments comments={comments} onCommentAdded={onCommentAdded} />
+    </main>
   ) : (
-    <CircularProgress />
+    <div className="flex h-full items-center justify-center">
+      <CircularProgress />
+    </div>
   );
 };
