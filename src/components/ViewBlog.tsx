@@ -1,13 +1,12 @@
 import { CircularProgress } from '@mui/material';
 import { format } from 'date-fns';
 import createDOMPurify from 'dompurify';
-import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useCallback, useContext, useEffect, useState } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
 
 import { BlogsAPI } from '../apis';
-import { selectSelectedUser } from '../features/usersSlice';
 import { BlogComment, BlogEntry, BlogLike, User } from '../model';
+import { AppState } from '../state';
 import { Avatar } from './Avatar';
 import { Comments } from './Comments';
 import { Likes } from './Likes';
@@ -26,9 +25,9 @@ export const ViewBlog = () => {
   const [comments, setComments] = useState<BlogComment[]>([]);
   const [entry, setEntry] = useState<BlogEntry>();
   const [likes, setLikes] = useState<BlogLike[]>([]);
+  const state = useContext(AppState);
 
-  const selectedUser = useSelector(selectSelectedUser);
-  const userHasLiked = includesUser(likes, selectedUser);
+  const userHasLiked = includesUser(likes, state.selectedUser.value);
 
   const loadBlogComments = useCallback(
     async (id: number) => setComments(await BlogsAPI.loadBlogComments(id)),
@@ -41,21 +40,21 @@ export const ViewBlog = () => {
   );
 
   const onLikeToggled = async () => {
-    if (entry && selectedUser) {
+    if (entry && state.selectedUser.value) {
       if (userHasLiked) {
-        setLikes(likes.filter(x => x.userId !== selectedUser.id));
-        await BlogsAPI.removeLike(entry.id, selectedUser.id);
+        setLikes(likes.filter(x => x.userId !== state.selectedUser.value!.id));
+        await BlogsAPI.removeLike(entry.id, state.selectedUser.value.id);
       } else {
         setLikes([
           ...likes,
           {
             blogEntryId: entry.id,
-            userId: selectedUser.id,
-            username: selectedUser.name,
+            userId: state.selectedUser.value.id,
+            username: state.selectedUser.value.name,
           },
         ]);
 
-        await BlogsAPI.addLike(entry.id, selectedUser.id);
+        await BlogsAPI.addLike(entry.id, state.selectedUser.value.id);
       }
 
       await loadBlogLikes(entry.id);
@@ -63,8 +62,8 @@ export const ViewBlog = () => {
   };
 
   const onCommentAdded = async (comment: string) => {
-    if (entry && selectedUser) {
-      await BlogsAPI.addComment(entry.id, comment, selectedUser.id);
+    if (entry && state.selectedUser.value) {
+      await BlogsAPI.addComment(entry.id, comment, state.selectedUser.value.id);
       await loadBlogComments(entry.id);
     }
   };

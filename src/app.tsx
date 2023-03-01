@@ -1,23 +1,15 @@
 import { SelectChangeEvent, ThemeProvider } from '@mui/material';
-import { useEffect } from 'preact/hooks';
-import { useDispatch, useSelector } from 'react-redux';
+import { useContext, useEffect } from 'preact/hooks';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { BlogsAPI } from './apis';
 import { EditBlog, Home, NavBar, ViewBlog } from './components';
-import {
-  selectAvailableUsers,
-  selectSelectedUser,
-  selectUser,
-  setUsers,
-} from './features/usersSlice';
 import { User } from './model';
+import { AppState } from './state';
 import { theme } from './theme';
 
 export const App = () => {
-  const availableUsers = useSelector(selectAvailableUsers);
-  const selectedUser = useSelector(selectSelectedUser);
-  const dispatch = useDispatch();
+  const state = useContext(AppState);
 
   const onSelectUser = (event: SelectChangeEvent) => {
     if (event.target) {
@@ -25,17 +17,17 @@ export const App = () => {
         value: string;
         name: string;
       };
-      const user = JSON.parse(target.value) as User;
-      dispatch(selectUser({ user }));
+      state.selectedUser.value = JSON.parse(target.value) as User;
     }
   };
 
   useEffect(() => {
     (async () => {
       const users = await BlogsAPI.loadUsers();
-      dispatch(setUsers({ users }));
+      state.availableUsers.value = users;
+      state.selectedUser.value = users[0];
     })();
-  }, [dispatch]);
+  }, []);
 
   return (
     <BrowserRouter>
@@ -43,9 +35,9 @@ export const App = () => {
         <div className="flex flex-col h-full">
           <NavBar
             className="sticky top-0 z-50"
-            availableUsers={availableUsers}
+            availableUsers={state.availableUsers.value}
             onSelectUser={onSelectUser}
-            selectedUser={selectedUser}
+            selectedUser={state.selectedUser.value}
           ></NavBar>
 
           <div className="flex flex-col h-full container mx-auto max-w-4xl relative mb-4">

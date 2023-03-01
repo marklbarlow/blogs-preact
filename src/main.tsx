@@ -1,14 +1,13 @@
 import './index.css';
 
 import { render } from 'preact';
-import { Provider } from 'react-redux';
 
 import { App } from './app';
-import { store } from './store';
+import { AppState, createAppState } from './state';
 
 render(
-  <Provider store={store}>
+  <AppState.Provider value={createAppState()}>
     <App />
-  </Provider>,
+  </AppState.Provider>,
   document.getElementById('app') as HTMLElement
 );

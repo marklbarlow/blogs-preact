@@ -1,5 +1,4 @@
-import { List } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
 
 import { BlogsAPI } from '../apis';

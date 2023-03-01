@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
 import { format } from 'date-fns';
-import { useRef } from 'react';
+import { useRef } from 'preact/hooks';
 
 import { BlogComment } from '../model';
 
