@@ -20,8 +20,14 @@ export const App = () => {
   const dispatch = useDispatch();
 
   const onSelectUser = (event: SelectChangeEvent) => {
-    const user = JSON.parse(event.target.value) as User;
-    dispatch(selectUser({ user }));
+    if (event.target) {
+      const target = event.target as EventTarget & {
+        value: string;
+        name: string;
+      };
+      const user = JSON.parse(target.value) as User;
+      dispatch(selectUser({ user }));
+    }
   };
 
   useEffect(() => {
