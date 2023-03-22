@@ -1,7 +1,7 @@
-export const Avatar = (props: { username: string }) => {
+export const Avatar = ({ username }: { username: string }) => {
   return (
     <div className="flex flex-row items-center gap-2">
-      <span> by {props.username} </span>
+      <span data-testid="username"> by {username} </span>
     </div>
   );
 };

@@ -1,24 +1,27 @@
-import { TextField } from '@mui/material';
 import { format } from 'date-fns';
 import { useRef } from 'preact/hooks';
 
 import { BlogComment } from '../model';
 
-export const Comments = (props: {
+export const Comments = ({
+  comments,
+  onCommentAdded,
+}: {
   comments: BlogComment[];
   onCommentAdded: (comment: string) => void;
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && event.shiftKey === false) {
       event.preventDefault();
-      props.onCommentAdded((event.target as HTMLTextAreaElement).value);
-      // @ts-ignore
-      inputRef.current.value = '';
+      onCommentAdded((event.target as HTMLTextAreaElement).value);
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      inputRef.current!.value = '';
     }
   };
 
-  const renderedComments = props.comments?.map(comment => (
+  const renderedComments = comments?.map(comment => (
     <div className="flex flex-col" key={comment.id}>
       <div className="flex flex-col rounded-lg bg-slate-200 p-2">
         <span className="font-bold">{comment.username}</span>
@@ -37,16 +40,13 @@ export const Comments = (props: {
   return (
     <div className="flex flex-col gap-2">
       {renderedComments}
-      <TextField
-        inputRef={inputRef}
-        fullWidth
-        multiline
-        variant="standard"
-        minRows={1}
-        maxRows={5}
+      <textarea
+        className="form-textarea rounded-md border-gray-300 shadow-sm resize-none"
+        rows={2}
         onKeyDown={onKeyDown}
         placeholder="Add a comment"
-      />
+        ref={inputRef}
+      ></textarea>
     </div>
   );
 };

@@ -1,71 +1,88 @@
-import {
-  Button,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import { User } from '../model';
 
-export const NavBar = (props: {
+export const NavBar = ({
+  availableUsers,
+  className,
+  onSelectUser,
+  selectedUser,
+}: {
   availableUsers: User[];
   className?: string;
-  onSelectUser: (event: SelectChangeEvent) => void;
+  onSelectUser: (user: User) => void;
   selectedUser?: User;
 }) => {
+  const navigate = useNavigate();
+
+  const onChangeUser = (event: Event) => {
+    if (event.target) {
+      const target = event.target as EventTarget & {
+        value: string;
+        name: string;
+      };
+      onSelectUser(JSON.parse(target.value) as User);
+    }
+  };
+
+  const onEditBlog = () => {
+    navigate(`/edit-blog`);
+  };
+
   return (
     <div
       className={`${
-        props.className ?? ''
+        className ?? ''
       } flex flex-row items-center gap-2 px-4 backdrop-blur border-b border-slate-900/10`}
     >
-      <Typography
-        variant="h6"
-        noWrap
-        component="a"
-        href="/"
-        sx={{
-          mr: 2,
-          fontFamily: 'monospace',
-          fontWeight: 700,
-          letterSpacing: '.3rem',
-          color: 'inherit',
-          textDecoration: 'none',
-        }}
-      >
-        Blog
-      </Typography>
+      <a className="text-xl font-mono text-decoration-none" href="/">
+        Blog - Preact
+      </a>
 
-      <Button href="/edit-blog" color="secondary" variant="contained">
+      <button
+        className="btn btn-blue"
+        type="button"
+        onClick={() => onEditBlog()}
+      >
         Create Blog Entry
-      </Button>
+      </button>
       <span className="flex-auto"></span>
       <span>Impersonating user:</span>
-      <FormControl>
-        <Select
-          variant="filled"
-          key={props.selectedUser?.id}
-          value={props.selectedUser ? JSON.stringify(props.selectedUser) : ''}
-          label="User"
-          onChange={props.onSelectUser}
-        >
-          {props.availableUsers.map(user => (
-            <MenuItem key={user.id} value={JSON.stringify(user)}>
-              {user.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
 
-      <Button
-        href="https://victorious-tree-0f7138003.2.azurestaticapps.net"
-        color="secondary"
-        variant="contained"
+      <select
+        className="form-select rounded-md border-gray-300 shadow-sm"
+        data-testid="user"
+        key={selectedUser?.id}
+        value={selectedUser ? JSON.stringify(selectedUser) : ''}
+        placeholder="User"
+        onChange={onChangeUser}
       >
-        View Angular Version
-      </Button>
+        {availableUsers.map(user => (
+          <option key={user.id} value={JSON.stringify(user)}>
+            {user.name}
+          </option>
+        ))}
+      </select>
+
+      <button
+        className="btn btn-blue"
+        onClick={() =>
+          (location.href =
+            'https://victorious-tree-0f7138003.2.azurestaticapps.net')
+        }
+      >
+        Angular
+      </button>
+
+      <button
+        className="btn btn-blue"
+        onClick={() =>
+          (location.href =
+            'https://gray-beach-08c130f03.2.azurestaticapps.net/')
+        }
+      >
+        React
+      </button>
     </div>
   );
 };

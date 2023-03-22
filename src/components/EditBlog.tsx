@@ -1,6 +1,5 @@
 import 'react-quill/dist/quill.snow.css';
 
-import { Button, TextField } from '@mui/material';
 import { useContext } from 'preact/hooks';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
 import ReactQuill from 'react-quill';
@@ -35,11 +34,12 @@ export const EditBlog = () => {
     <main>
       <form className="flex flex-col gap-4 w-full mt-8">
         <h1 className="text-4xl">Create Blog Post</h1>
-        <TextField
-          fullWidth
-          label="Title"
-          variant="standard"
-          inputProps={register('title', {
+        <input
+          className="w-full form-input rounded-md border-gray-300 shadow-sm"
+          data-testid="title"
+          type="text"
+          placeholder="Title"
+          {...register('title', {
             required: true,
           })}
         />
@@ -61,14 +61,14 @@ export const EditBlog = () => {
           )}
         />
         <div className="flex justify-end">
-          <Button
-            color="secondary"
-            variant="contained"
+          <button
+            className="btn btn-blue"
+            type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid}
           >
             Save
-          </Button>
+          </button>
         </div>
       </form>
     </main>

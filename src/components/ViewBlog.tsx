@@ -1,4 +1,3 @@
-import { CircularProgress } from '@mui/material';
 import { format } from 'date-fns';
 import createDOMPurify from 'dompurify';
 import { useCallback, useContext, useEffect, useState } from 'preact/hooks';
@@ -8,6 +7,7 @@ import { BlogsAPI } from '../apis';
 import { BlogComment, BlogEntry, BlogLike, User } from '../model';
 import { AppState } from '../state';
 import { Avatar } from './Avatar';
+import { CircularProgress } from './CircularProgress';
 import { Comments } from './Comments';
 import { Likes } from './Likes';
 
@@ -81,15 +81,18 @@ export const ViewBlog = () => {
 
   return entry ? (
     <main className="flex flex-col gap-4 w-full mt-8">
-      <span className="text-stone-500">
+      <span data-testid="date" className="text-stone-500">
         {format(new Date(entry.timestamp), 'EEEE, MMMM d, y')}
       </span>
 
-      <h1 className="text-4xl">{entry.title}</h1>
+      <h1 data-testid="title" className="text-4xl">
+        {entry.title}
+      </h1>
       <Avatar username={entry.username}></Avatar>
 
       <article className="prose prose-lg max-w-none prose-img:mx-auto">
         <div
+          data-testid="text"
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(entry.text),
           }}
